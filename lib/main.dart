@@ -77,6 +77,10 @@ class MyApp extends StatelessWidget {
                       ),
                     ),
                   ),
+                  snackBarTheme: SnackBarThemeData(
+                    backgroundColor: Colors.white,
+                    contentTextStyle: Theme.of(context).textTheme.subtitle1
+                  ),
                   textTheme: TextTheme(
                     bodyText1: TextStyle(
                         fontSize: 14,
@@ -157,6 +161,11 @@ class MyApp extends StatelessWidget {
                         ),
                       ),
                     ),
+                  ),
+                  snackBarTheme: SnackBarThemeData(
+                      backgroundColor: Colors.grey.shade700.withOpacity(0.96),
+                      contentTextStyle: Theme.of(context).textTheme.subtitle1,
+                    actionTextColor: Colors.white
                   ),
                   textTheme: TextTheme(
                     bodyText1: TextStyle(

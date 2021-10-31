@@ -56,8 +56,14 @@ class _MarketPriceScreenState extends State<MarketPriceScreen> {
               if (checkPermission) {
                 // var path = await ExternalPath.getExternalStoragePublicDirectory(
                 //     ExternalPath.DIRECTORY_DOWNLOADS);
-                Directory dir = await getApplicationDocumentsDirectory();
-                // String file = "${dir.path}/";
+                // Directory dir = await getApplicationDocumentsDirectory();
+                Directory dir;
+
+                if (Platform.isAndroid) {
+                  dir = (await getExternalStorageDirectory())!;
+                } else {
+                  dir = await getApplicationDocumentsDirectory();
+                }
                 String fileName =
                     'top${cubit.resultSize}_in_${cubit.selectedVsCurrencyId2}.csv';
                 File f = File(dir.path + "/$fileName");
@@ -72,6 +78,7 @@ class _MarketPriceScreenState extends State<MarketPriceScreen> {
                 row.add('price_change_percentage_24h');
 
                 cubit.marketCurrencies.forEach((element) {
+                  row = [];
                   row.add(element.market_cap_rank);
                   row.add(element.name);
                   row.add(element.symbol);
@@ -85,16 +92,14 @@ class _MarketPriceScreenState extends State<MarketPriceScreen> {
                 f.writeAsString(csv).then((value) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      backgroundColor: Colors.white,
+                      // backgroundColor: Colors.white,
                       content: Text(
                         'file $fileName downloaded in:\n${dir.path}',
                         style: Theme.of(context).textTheme.subtitle1,
-
                       ),
                       action: SnackBarAction(
                         label: 'open',
                         onPressed: () {
-
                           OpenFile.open(dir.path + "/$fileName");
                         },
                       ),
@@ -160,7 +165,9 @@ class _MarketPriceScreenState extends State<MarketPriceScreen> {
                               //   cubit.updateResultSize(s);
                               // },
                               onSaved: (s) {
-                                cubit.updateResultSize(s!);
+                                if (s != null && s.isNotEmpty) {
+                                  cubit.updateResultSize(s);
+                                }
                               },
 
                               // onFieldSubmitted: (s) {
@@ -182,6 +189,7 @@ class _MarketPriceScreenState extends State<MarketPriceScreen> {
                             child: BlocConsumer<CryptoCurrenciesCubit,
                                     CryptoCurrenciesState>(
                                 listener: (context, state) {},
+
                                 builder: (context, state) {
                                   CryptoCurrenciesCubit cubit =
                                       CryptoCurrenciesCubit.instance(context);
@@ -264,6 +272,14 @@ class _MarketPriceScreenState extends State<MarketPriceScreen> {
       ),
       body: BlocConsumer<CryptoCurrenciesCubit, CryptoCurrenciesState>(
           listener: (context, state) {},
+          buildWhen: (oldS,newS){
+            if(newS is CryptoCurrenciesSelectVsCurrency2){
+              return false;
+            }else{
+              return true;
+            }
+
+          },
           builder: (context, state) {
             CryptoCurrenciesCubit cubit =
                 CryptoCurrenciesCubit.instance(context);

@@ -57,6 +57,7 @@ class CryptoCurrenciesExchangeFailed extends CryptoCurrenciesState {
   CryptoCurrenciesExchangeFailed(this.errorMsg);
 }
 
-
 //market
 class CryptoCurrenciesResultSize extends CryptoCurrenciesState {}
+
+class CryptoCurrenciesSelectVsCurrency2 extends CryptoCurrenciesState {}

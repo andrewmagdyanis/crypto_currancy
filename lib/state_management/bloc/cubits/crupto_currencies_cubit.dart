@@ -103,7 +103,7 @@ class CryptoCurrenciesCubit extends Cubit<CryptoCurrenciesState> {
 
   void updateVsCurrencyId2(String id) {
     selectedVsCurrencyId2 = id;
-    emit(CryptoCurrenciesSelectVsCurrency());
+    emit(CryptoCurrenciesSelectVsCurrency2());
   }
 
   int resultSize = 25;
