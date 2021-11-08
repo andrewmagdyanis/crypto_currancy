@@ -26,7 +26,8 @@ class _AppMainLayoutState extends State<AppMainLayout> {
     CryptoCurrenciesCubit.instance(context)
       ..getAllVsCurrencies(context)
       ..getAllCurrencies()
-      ..getAllMarketCurrencies();
+      ..getAllMarketCurrencies()
+      ..getAllFinancePlatforms();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen((connectivityResult) {
       if (connectivityResult == ConnectivityResult.mobile ||
@@ -41,6 +42,7 @@ class _AppMainLayoutState extends State<AppMainLayout> {
         CryptoCurrenciesCubit.instance(context).getAllVsCurrencies(context);
         CryptoCurrenciesCubit.instance(context).getAllCurrencies();
         CryptoCurrenciesCubit.instance(context).getAllMarketCurrencies();
+        CryptoCurrenciesCubit.instance(context).getAllFinancePlatforms();
       }
     });
   }
@@ -99,8 +101,8 @@ class _AppMainLayoutState extends State<AppMainLayout> {
                         label: 'Market',
                       ),
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.settings),
-                        label: 'Settings',
+                        icon: Icon(Icons.account_tree_outlined),
+                        label: 'Platforms',
                       )
                     ],
                   );

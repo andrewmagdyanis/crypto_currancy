@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:crypto_currancy/screens/market_price_screen.dart';
 import 'package:crypto_currancy/screens/home_screen.dart';
-import 'package:crypto_currancy/screens/settings_screen.dart';
+import 'package:crypto_currancy/screens/platforms_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
@@ -18,7 +18,7 @@ class AppNavigationCubit extends Cubit<AppNavigationState> {
   List<Widget> screens=[
     HomeScreen(),
     MarketPriceScreen(),
-    SettingsScreen()
+    PlatformsScreen()
   ];
 
   void modifyIndex(int index) {

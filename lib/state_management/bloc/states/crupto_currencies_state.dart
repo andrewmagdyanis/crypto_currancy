@@ -57,7 +57,19 @@ class CryptoCurrenciesExchangeFailed extends CryptoCurrenciesState {
   CryptoCurrenciesExchangeFailed(this.errorMsg);
 }
 
-//market
+//market filter
 class CryptoCurrenciesResultSize extends CryptoCurrenciesState {}
 
 class CryptoCurrenciesSelectVsCurrency2 extends CryptoCurrenciesState {}
+
+
+//finance platforms
+class CryptoCurrenciesGetPlatformsLoading extends CryptoCurrenciesState {}
+
+class CryptoCurrenciesGetPlatformsSuccess extends CryptoCurrenciesState {}
+
+class CryptoCurrenciesGetPlatformsFailed extends CryptoCurrenciesState {
+  final String errorMsg;
+
+  CryptoCurrenciesGetPlatformsFailed(this.errorMsg);
+}

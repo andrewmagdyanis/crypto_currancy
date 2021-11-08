@@ -5,6 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:crypto_currancy/constants.dart';
 import 'package:crypto_currancy/helpers/dio_helper.dart';
+import 'package:crypto_currancy/state_management/model/financePlatform.dart';
 import 'package:crypto_currancy/state_management/model/marketCurrency.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,6 +22,8 @@ class CryptoCurrenciesCubit extends Cubit<CryptoCurrenciesState> {
   static CryptoCurrenciesCubit instance(BuildContext context) =>
       BlocProvider.of(context, listen: false);
 
+  ///home page:
+  //get all vs currencies
   List<dynamic> vsCurrencies = [];
 
   Future<void> getAllVsCurrencies(context) async {
@@ -67,6 +70,7 @@ class CryptoCurrenciesCubit extends Cubit<CryptoCurrenciesState> {
     }
   }
 
+  //get all currencies:
   List<dynamic> currencies = [];
 
   Future<void> getAllCurrencies() async {
@@ -99,59 +103,7 @@ class CryptoCurrenciesCubit extends Cubit<CryptoCurrenciesState> {
     }
   }
 
-  String selectedVsCurrencyId2 = 'usd';
-
-  void updateVsCurrencyId2(String id) {
-    selectedVsCurrencyId2 = id;
-    emit(CryptoCurrenciesSelectVsCurrency2());
-  }
-
-  int resultSize = 25;
-
-  void updateResultSize(String size) {
-    resultSize = int.parse(size.toString());
-    emit(CryptoCurrenciesResultSize());
-  }
-
-  List<MarketCurrency> marketCurrencies = [];
-
-  Future<void> getAllMarketCurrencies() async {
-    Connectivity connectivity = Connectivity();
-    ConnectivityResult connectivityResult =
-        await connectivity.checkConnectivity();
-    bool isConnected = connectivityResult == ConnectivityResult.wifi ||
-        connectivityResult == ConnectivityResult.mobile;
-
-    if (isConnected) {
-      print('connected');
-
-      emit(CryptoCurrenciesGetMarketLoading());
-
-      String url = '/coins/markets';
-      Map<String, dynamic> query = {
-        "vs_currency": selectedVsCurrencyId2,
-        "per_page": resultSize,
-      };
-      DioHelper.getData(url, query).then((value) {
-        print(value);
-        print('value.data:${value.data}');
-        print(value.data.runtimeType);
-        print(value.data.length);
-
-        marketCurrencies = [];
-        (value.data as List).forEach((element) {
-          marketCurrencies.add(MarketCurrency.fromJson(element));
-        });
-        emit(CryptoCurrenciesGetMarketSuccess());
-      }).catchError((e) {
-        print('error in getMarketCryptoCurrencies: $e');
-        final errorMessage = DioExceptions.fromDioError(e).toString();
-        print(errorMessage);
-        emit(CryptoCurrenciesGetMarketFailed(errorMessage));
-      });
-    }
-  }
-
+  //select main currency
   String selectedMainCurrencyId = '';
 
   void updateMainCurrencyId(String id) {
@@ -159,6 +111,7 @@ class CryptoCurrenciesCubit extends Cubit<CryptoCurrenciesState> {
     emit(CryptoCurrenciesSelectMainCurrency());
   }
 
+  //select vs currency
   String selectedVsCurrencyId = '';
 
   void updateVsCurrencyId(String id) {
@@ -166,6 +119,7 @@ class CryptoCurrenciesCubit extends Cubit<CryptoCurrenciesState> {
     emit(CryptoCurrenciesSelectVsCurrency());
   }
 
+  //write the amount
   String amount = '0';
 
   void updateAmount(String a) {
@@ -174,6 +128,7 @@ class CryptoCurrenciesCubit extends Cubit<CryptoCurrenciesState> {
     emit(CryptoCurrenciesSelectAmount());
   }
 
+  //make exchange:
   String result = '';
 
   Future<void> makeExchange(BuildContext context) async {
@@ -226,4 +181,108 @@ class CryptoCurrenciesCubit extends Cubit<CryptoCurrenciesState> {
           });
     }
   }
+
+  ///____________________________________________________________________________
+
+  ///market page:
+  //select vs currency in filter
+  String selectedVsCurrencyId2 = 'usd';
+
+  void updateVsCurrencyId2(String id) {
+    selectedVsCurrencyId2 = id;
+    emit(CryptoCurrenciesSelectVsCurrency2());
+  }
+
+  //select result size in filter
+  int resultSize = 25;
+
+  void updateResultSize(String size) {
+    resultSize = int.parse(size.toString());
+    emit(CryptoCurrenciesResultSize());
+  }
+
+  //market currencies
+  List<MarketCurrency> marketCurrencies = [];
+
+  Future<void> getAllMarketCurrencies() async {
+    Connectivity connectivity = Connectivity();
+    ConnectivityResult connectivityResult =
+        await connectivity.checkConnectivity();
+    bool isConnected = connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile;
+
+    if (isConnected) {
+      print('connected');
+
+      emit(CryptoCurrenciesGetMarketLoading());
+
+      String url = '/coins/markets';
+      Map<String, dynamic> query = {
+        "vs_currency": selectedVsCurrencyId2,
+        "per_page": resultSize,
+      };
+      DioHelper.getData(url, query).then((value) {
+        print(value);
+        print('value.data:${value.data}');
+        print(value.data.runtimeType);
+        print(value.data.length);
+
+        marketCurrencies = [];
+        (value.data as List).forEach((element) {
+          marketCurrencies.add(MarketCurrency.fromJson(element));
+        });
+        emit(CryptoCurrenciesGetMarketSuccess());
+      }).catchError((e) {
+        print('error in getMarketCryptoCurrencies: $e');
+        final errorMessage = DioExceptions.fromDioError(e).toString();
+        print(errorMessage);
+        emit(CryptoCurrenciesGetMarketFailed(errorMessage));
+      });
+    }
+  }
+
+  ///____________________________________________________________________________
+
+  ///finance platforms:
+  List<FinancePlatform> financePlatforms = [];
+
+  Future<void> getAllFinancePlatforms() async {
+    Connectivity connectivity = Connectivity();
+    ConnectivityResult connectivityResult =
+        await connectivity.checkConnectivity();
+    bool isConnected = connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile;
+
+    if (isConnected) {
+      print('connected');
+
+      emit(CryptoCurrenciesGetPlatformsLoading());
+
+      String url = '/finance_platforms';
+      Map<String, dynamic> query = {
+        // "vs_currency": selectedVsCurrencyId2,
+        "per_page": 100,
+      };
+      DioHelper.getData(url, query).then((value) {
+        print(value);
+        print('value.data:${value.data}');
+        print(value.data.runtimeType);
+        print(value.data.length);
+
+        financePlatforms = [];
+        (value.data as List).forEach((element) {
+          financePlatforms.add(FinancePlatform.fromJson(element));
+        });
+        emit(CryptoCurrenciesGetPlatformsSuccess());
+      }).catchError((e) {
+        print('error in getMarketCryptoCurrencies: $e');
+        final errorMessage = DioExceptions.fromDioError(e).toString();
+        print(errorMessage);
+        emit(CryptoCurrenciesGetPlatformsFailed(errorMessage));
+      });
+    }
+  }
+
+  ///____________________________________________________________________________
+
 }
